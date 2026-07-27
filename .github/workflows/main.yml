@@ -1,0 +1,22 @@
+name: OIDC
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: 
+permissions: 
+  id-token: write
+  contents: read
+
+jobs:
+  oidc-test:
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v3
+      - name: Configure AWS Credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v4.1.0
+        with:
+          aws-region: ap-south-1
+          role-to-assume: arn:aws:iam::442429446642:role/github-role
+      - name: Test aws credentials
+        run: aws sts get-caller-identity
